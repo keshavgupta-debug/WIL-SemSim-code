@@ -16,14 +16,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+
 import jiwer
 import numpy as np
 import pandas as pd
 
-
 # =====================================================================
 # 1. WORD INFORMATION LOST (WIL)
 # =====================================================================
+
 
 @dataclass(frozen=True)
 class ErrorCounts:
@@ -156,8 +157,12 @@ def per_item_semsim(
         return scores
 
     model = load_semsim_model(model_id)
-    ref_emb = model.encode(to_encode_refs, batch_size=batch_size, normalize_embeddings=True)
-    hyp_emb = model.encode(to_encode_hyps, batch_size=batch_size, normalize_embeddings=True)
+    ref_emb = model.encode(
+        to_encode_refs, batch_size=batch_size, normalize_embeddings=True
+    )
+    hyp_emb = model.encode(
+        to_encode_hyps, batch_size=batch_size, normalize_embeddings=True
+    )
 
     # Dot product of normalized embeddings = cosine similarity
     sims = np.sum(ref_emb * hyp_emb, axis=1)
@@ -171,6 +176,7 @@ def per_item_semsim(
 # =====================================================================
 # 3. HIGH-LEVEL EVALUATION PIPELINE
 # =====================================================================
+
 
 def evaluate_asr_pairings(
     df: pd.DataFrame,
@@ -308,7 +314,11 @@ if __name__ == "__main__":
     print(f"  • Total samples:      {summary['n_samples']}")
     print(f"  • Total ref words:    {summary['total_ref_words']}")
     print(f"  • Total hyp words:    {summary['total_hyp_words']}")
-    print(f"  • Corpus WER:         {summary['corpus_wer']:.3f} ({summary['corpus_wer'] * 100:.1f}%)")
-    print(f"  • Corpus WIL:         {summary['corpus_wil']:.3f} ({summary['corpus_wil'] * 100:.1f}%)")
+    print(
+        f"  • Corpus WER:         {summary['corpus_wer']:.3f} ({summary['corpus_wer'] * 100:.1f}%)"
+    )
+    print(
+        f"  • Corpus WIL:         {summary['corpus_wil']:.3f} ({summary['corpus_wil'] * 100:.1f}%)"
+    )
     print(f"  • Corpus SemSim:      {summary['corpus_semsim']:.3f}")
     print("=" * 95)
